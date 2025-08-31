@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - MedShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2eTDRqGgB+48B/aY6rG/Wf6Qx+2F6M9Fw9R9v+6g..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">Votre bien-être</div>
+    <nav>
+        <ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Accueil</a></li>
+            <li><a href="articles.html"><i class="fa-solid fa-bag-shopping"></i> Nos Articles</a></li>
+            <li><a href="contact.html" class="active"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="contact-form">
+    <h2><i class="fa-solid fa-envelope-open-text"></i> Contactez-nous</h2>
+    <p>Utilisez l'un des formulaires ci-dessous pour nous contacter. Nous sommes là pour vous aider à trouver le produit qu'il vous faut.</p>
+    <form action="https://formspree.io/f/mldwgvko" method="POST">
+        <label for="name"><i class="fa-solid fa-user"></i> Nom :</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="location"><i class="fa-solid fa-location-dot"></i> Lieu :</label>
+        <input type="text" id="location" name="location" required>
+        
+        <label for="country"><i class="fa-solid fa-globe"></i> Pays :</label>
+        <select id="country" name="country" required>
+            <option value="">Sélectionnez un pays</option>
+            <option value="Afrique du Sud">Afrique du Sud</option>
+            <option value="Algérie">Algérie</option>
+            <option value="Angola">Angola</option>
+            <option value="Bénin">Bénin</option>
+            <option value="Botswana">Botswana</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Burundi">Burundi</option>
+            <option value="Cameroun">Cameroun</option>
+            <option value="Cap-Vert">Cap-Vert</option>
+            <option value="République centrafricaine">République centrafricaine</option>
+            <option value="Comores">Comores</option>
+            <option value="Congo-Brazzaville">Congo-Brazzaville</option>
+            <option value="Congo-Kinshasa">Congo-Kinshasa</option>
+            <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+            <option value="Djibouti">Djibouti</option>
+            <option value="Égypte">Égypte</option>
+            <option value="Érythrée">Érythrée</option>
+            <option value="Eswatini">Eswatini</option>
+            <option value="Éthiopie">Éthiopie</option>
+            <option value="Gabon">Gabon</option>
+            <option value="Gambie">Gambie</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Guinée">Guinée</option>
+            <option value="Guinée-Bissau">Guinée-Bissau</option>
+            <option value="Guinée équatoriale">Guinée équatoriale</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Lesotho">Lesotho</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Libye">Libye</option>
+            <option value="Madagascar">Madagascar</option>
+            <option value="Malawi">Malawi</option>
+            <option value="Mali">Mali</option>
+            <option value="Maroc">Maroc</option>
+            <option value="Maurice">Maurice</option>
+            <option value="Mauritanie">Mauritanie</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="Namibie">Namibie</option>
+            <option value="Niger">Niger</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Ouganda">Ouganda</option>
+            <option value="République arabe sahraouie démocratique">République arabe sahraouie démocratique</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Sao Tomé-et-Principe">Sao Tomé-et-Principe</option>
+            <option value="Sénégal">Sénégal</option>
+            <option value="Seychelles">Seychelles</option>
+            <option value="Sierra Leone">Sierra Leone</option>
+            <option value="Somalie">Somalie</option>
+            <option value="Soudan">Soudan</option>
+            <option value="Soudan du Sud">Soudan du Sud</option>
+            <option value="Tanzanie">Tanzanie</option>
+            <option value="Tchad">Tchad</option>
+            <option value="Togo">Togo</option>
+            <option value="Tunisie">Tunisie</option>
+            <option value="Zambie">Zambie</option>
+            <option value="Zimbabwe">Zimbabwe</option>
+        </select>
+
+        <label for="phone"><i class="fa-solid fa-phone"></i> Numéro :</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <label for="email"><i class="fa-solid fa-at"></i> Email :</label>
+        <input type="email" id="email" name="_replyto" required>
+
+        <label for="message"><i class="fa-solid fa-comment"></i> Message :</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <button type="submit"><i class="fa-solid fa-paper-plane"></i> Envoyer</button>
+    </form>
+</section>
+
+<hr>
+
+<section class="questionnaire">
+    <h2><i class="fa-solid fa-clipboard-question"></i> Questionnaires et formulaires</h2>
+    <p class="form-description">Ces outils nous aident à mieux vous conseiller et à optimiser votre expérience d'achat. Remplissez le ou les formulaires qui vous concernent.</p>
+
+    <div class="form-container">
+        <h3><i class="fa-solid fa-notes-medical"></i> Questionnaire de pré-achat – Produits "DIEU GUÉRIT"</h3>
+        <p class="form-description">**Objectif** : Identifier vos besoins pour vous proposer le produit le plus adapté.</p>
+        <form action="https://formspree.io/f/xkgvoedw" method="POST">
+            <div class="question">
+                <p>1. Avez-vous un ou plusieurs problèmes de santé ou de peau spécifiques ?</p>
+                <input type="checkbox" id="problem-yes" name="problem-specific" value="Oui">
+                <label for="problem-yes">Oui</label>
+                <input type="checkbox" id="problem-no" name="problem-specific" value="Non">
+                <label for="problem-no">Non</label>
+                <label for="problem-details" class="sub-label">Si oui, lesquels ?</label>
+                <textarea id="problem-details" name="problem-details" rows="2"></textarea>
+            </div>
+
+            <div class="question">
+                <p>2. Quel type de produit recherchez-vous ?</p>
+                <input type="radio" id="pommade" name="product-type" value="Pommade">
+                <label for="pommade">Pommade</label><br>
+                <input type="radio" id="poudre" name="product-type" value="Poudre">
+                <label for="poudre">Poudre</label><br>
+                <input type="radio" id="savon" name="product-type" value="Savon">
+                <label for="savon">Savon</label><br>
+                <input type="radio" id="conseil" name="product-type" value="Je ne sais pas, je souhaite être conseillé(e)">
+                <label for="conseil">Je ne sais pas, je souhaite être conseillé(e)</label>
+            </div>
+
+            <div class="question">
+                <p>3. Quelle est la zone concernée par votre problème ?</p>
+                <input type="radio" id="visage" name="affected-area" value="Visage">
+                <label for="visage">Visage</label>
+                <input type="radio" id="corps" name="affected-area" value="Corps">
+                <label for="corps">Corps</label>
+                <input type="radio" id="cuir-chevelu" name="affected-area" value="Cuir chevelu">
+                <label for="cuir-chevelu">Cuir chevelu</label><br>
+                <label for="other-area" class="sub-label">Autre :</label>
+                <input type="text" id="other-area" name="other-area">
+            </div>
+
+            <div class="question">
+                <p>4. Depuis combien de temps souffrez-vous de ce problème ?</p>
+                <input type="radio" id="moins-semaine" name="problem-duration" value="Moins d'une semaine">
+                <label for="moins-semaine">Moins d'une semaine</label><br>
+                <input type="radio" id="1-3-semaines" name="problem-duration" value="1 à 3 semaines">
+                <label for="1-3-semaines">1 à 3 semaines</label><br>
+                <input type="radio" id="plus-un-mois" name="problem-duration" value="Plus d'un mois">
+                <label for="plus-un-mois">Plus d'un mois</label><br>
+                <input type="radio" id="plusieurs-annees" name="problem-duration" value="Plusieurs années">
+                <label for="plusieurs-annees">Plusieurs années</label>
+            </div>
+
+            <div class="question">
+                <p>5. Avez-vous déjà utilisé d'autres produits pour ce problème ? Si oui, lesquels ?</p>
+                <textarea id="previous-products" name="previous-products" rows="2"></textarea>
+            </div>
+
+            <label for="user-info-name"><i class="fa-solid fa-user"></i> Nom :</label>
+            <input type="text" id="user-info-name" name="user-info-name" required>
+
+            <label for="user-info-phone"><i class="fa-solid fa-phone"></i> Numéro de téléphone :</label>
+            <input type="tel" id="user-info-phone" name="user-info-phone" required>
+
+            <button type="submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Envoyer</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <p> &copy; 2025 MedShop | <a href="#"><i class="fa-solid fa-gavel"></i> Mentions légales</a> | <a href="#"><i class="fa-solid fa-shield-dog"></i> Politique de confidentialité</a></p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>

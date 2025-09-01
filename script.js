@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${item.img}" alt="${item.name}" class="cart-item-img">
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
-                    <p>${item.price} €</p>
+                    <p>${item.price} Fcfa</p>
                     <div class="cart-item-quantity">
                         Quantité : ${item.quantity}
                     </div>
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             totalItems += item.quantity;
         });
 
-        if (cartTotalDiv) cartTotalDiv.textContent = `Total : ${total} €`;
+        if (cartTotalDiv) cartTotalDiv.textContent = `Total : ${total} Fcfa`;
         if (cartCountSpan) cartCountSpan.textContent = totalItems;
         
         // Sauvegarde le panier dans le stockage local
@@ -89,11 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let total = 0;
 
         cart.forEach(item => {
-            orderMessage += `🛒 ${item.name} x${item.quantity} - ${item.price * item.quantity} €\n`;
+            orderMessage += `🛒 ${item.name} x${item.quantity} - ${item.price * item.quantity} Fcfa\n`;
             total += item.price * item.quantity;
         });
 
-        orderMessage += `\n💰 Total : ${total} €`;
+        orderMessage += `\n💰 Total : ${total} Fcfa`;
         orderMessage += `\n\nMerci de me donner les détails de la livraison et du paiement ! 🙏`;
 
         const encodedMessage = encodeURIComponent(orderMessage);

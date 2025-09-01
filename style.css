@@ -147,7 +147,14 @@ nav ul li a.active::after {
     font-size: 60px;
     margin-bottom: 25px;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    display: flex; /* Permet d'aligner l'icône et le texte */
+    align-items: center; /* Aligner verticalement */
 }
+.hero h1 .fa-solid { /* Nouvelle règle pour l'icône dans le titre h1 du héro */
+    margin-right: 15px; /* Plus d'espace pour l'icône */
+    font-size: 0.9em; /* Légèrement plus petite que le texte */
+}
+
 
 .hero p {
     font-size: 20px;
@@ -186,7 +193,9 @@ nav ul li a.active::after {
     text-align: center;
     margin-bottom: 40px;
     position: relative;
-    display: inline-block;
+    display: flex; /* Permet d'aligner l'icône et le texte */
+    justify-content: center; /* Centrer l'ensemble */
+    align-items: center; /* Aligner verticalement */
 }
 .categories h2::after,
 .products h2::after {
@@ -320,6 +329,10 @@ nav ul li a.active::after {
     font-weight: bold;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex; /* Pour aligner l'icône */
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espace entre l'icône et le texte */
 }
 
 /* TÉMOIGNAGE */
@@ -336,6 +349,16 @@ nav ul li a.active::after {
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
+.testimonial p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.testimonial p .fa-solid {
+    color: #007bff;
+    font-size: 1.2em;
+}
 
 /* FAQ ACCORDÉON */
 .faq {
@@ -351,6 +374,10 @@ nav ul li a.active::after {
 .faq h2 {
     text-align: center;
     margin-bottom: 30px;
+    display: flex; /* Pour aligner l'icône */
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Espace entre l'icône et le texte */
 }
 
 .faq-item {
@@ -795,5 +822,18 @@ hr {
     .faq, .contact-form, .questionnaire {
         width: 95%;
         padding: 20px;
+    }
+    /* Ajustement des icônes pour les petits écrans */
+    .hero h1 .fa-solid {
+        margin-right: 10px;
+        font-size: 0.8em;
+    }
+    .categories h2,
+    .products h2,
+    .faq h2 {
+        gap: 8px;
+    }
+    .offer {
+        gap: 10px;
     }
 }

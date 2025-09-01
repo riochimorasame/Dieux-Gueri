@@ -836,4 +836,24 @@ hr {
     .offer {
         gap: 10px;
     }
+
+    .offer button {
+    background: linear-gradient(90deg, #ff7e5f 0%, #ff9472 100%);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 16px rgba(255,126,95,0.15);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-left: 10px;
+}
+
+.offer button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 24px rgba(255,126,95,0.25);
+    background: linear-gradient(90deg, #ff9472 0%, #ff7e5f 100%);
+}
 }

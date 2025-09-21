@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Bien-Être</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chat-container {
+            max-width: 700px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .message-bubble {
+            padding: 0.75rem 1.25rem;
+            border-radius: 1.25rem;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #2563eb;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+        }
+        .bot-message {
+            background-color: #e5e7eb;
+            color: #374151;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+        .input-area {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            align-items: center;
+        }
+        .input-area input[type="text"] {
+            flex-grow: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 9999px;
+            padding: 0.75rem 1.25rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-area input[type="text"]:focus {
+            border-color: #2563eb;
+        }
+        .input-area button {
+            padding: 0.75rem 1.5rem;
+            background-color: #2563eb;
+            color: white;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .input-area button:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center p-4 min-h-screen flex-col">
+    <!-- Conteneur principal du chat -->
+    <div class="chat-container bg-white shadow-lg">
+        <!-- En-tête de l'application -->
+        <header class="p-6 text-center bg-blue-600 text-white rounded-t-2xl shadow-md flex flex-col items-center">
+            <!-- Icônes médicales et de robot -->
+            <div class="flex items-center space-x-4 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L12 15.75M15 12.75L12 15.75M12 15.75L12 18.75M12 15.75L12 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12a6 6 0 1 1 12 0 6 6 0 0 1-12 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18V21M12 3v3M9 6h6M8 21h8M4 12h-1M20 12h1M6 6v-1M18 6v-1M6 18v1M18 18v1"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold mt-2">Votre Assistant de Bien-être</h1>
+            <p class="text-sm opacity-90 mt-1">Je suis Vitalie, là pour vous aider.</p>
+        </header>
+
+        <!-- Zone d'affichage du chat -->
+        <div id="chatHistory" class="flex-grow p-4 overflow-y-auto space-y-4">
+            <!-- Les messages s'afficheront ici -->
+        </div>
+
+        <!-- Zone de saisie -->
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Écrivez votre message..." class="focus:ring-2 focus:ring-blue-500">
+            <button id="sendBtn">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = "";
+        const chatHistory = document.getElementById('chatHistory');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        
+        let conversationHistory = [];
+        let dialogueState = 'initial';
+        let conversationContext = {};
+
+        const products = {
+            "savon": { prix: "10 €", utilisation: "Nettoyage de la peau, acné, impuretés" },
+            "poudre médicale": { prix: "15 €", utilisation: "Problèmes de peau, infections cutanées" },
+            "pomade": { prix: "5 €", utilisation: "Douleurs musculaires, inflammations" }
+        };
+
+        const systemPrompt = `Tu es un assistant virtuel amical et serviable pour un magasin de bien-être. Ton nom est Vitalie. Tu connais les produits suivants :
+        - Produit: Savon, Prix: 10 €, Utilisation: Nettoyage de la peau, acné, impuretés
+        - Produit: Poudre médicale, Prix: 15 €, Utilisation: Problèmes de peau, infections cutanées
+        - Produit: Pomade, Prix: 5 €, Utilisation: Douleurs musculaires, inflammations
+
+        Ton but est de guider le client. Si un client mentionne un problème (comme "douleur", "bouton" ou "peau"), tu dois lui poser des questions pour affiner le conseil. Les questions doivent être posées une par une pour ne pas submerger le client. Après avoir obtenu les informations nécessaires, tu recommandes un produit de la liste ci-dessus, en justifiant ton choix par son utilisation et son prix. Réponds de manière concise, avec empathie et des emojis.`;
+
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message-bubble', 'shadow-sm');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+            messageDiv.textContent = content;
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const userMessage = userInput.value.trim().toLowerCase();
+            if (!userMessage) return;
+
+            addMessage(userInput.value, 'user');
+            userInput.value = '';
+            sendBtn.disabled = true;
+
+            const loadingMessage = document.createElement('div');
+            loadingMessage.textContent = 'Le bot réfléchit...';
+            loadingMessage.classList.add('message-bubble', 'bot-message', 'italic', 'text-gray-500', 'shadow-sm');
+            chatHistory.appendChild(loadingMessage);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+            
+            conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+            let prompt = userMessage;
+
+            if (dialogueState === 'initial') {
+                dialogueState = 'listening';
+            } else if (dialogueState === 'asking_symptom') {
+                conversationContext.symptom = userMessage;
+                prompt = `L'utilisateur a répondu "${userMessage}". Maintenant, demande-lui depuis combien de temps il a ce problème.`;
+                dialogueState = 'asking_duration';
+            } else if (dialogueState === 'asking_duration') {
+                conversationContext.duration = userMessage;
+                prompt = `L'utilisateur a répondu "${userMessage}". Demande-lui s'il souhaite un produit curatif, apaisant ou préventif.`;
+                dialogueState = 'asking_type';
+            } else if (dialogueState === 'asking_type') {
+                conversationContext.type = userMessage;
+                // Logique de recommandation basée sur les réponses
+                let recommendation = null;
+                if (conversationContext.symptom.includes('peau') || conversationContext.symptom.includes('bouton')) {
+                    recommendation = products["poudre médicale"];
+                    prompt = `L'utilisateur souhaite un produit pour ses problèmes de peau. Il a répondu "${userMessage}" pour le type de produit. D'après la liste de produits, recommande la Poudre médicale à 15 € en expliquant que c'est idéal pour les problèmes de peau persistants.`;
+                } else if (conversationContext.symptom.includes('douleur')) {
+                    recommendation = products["pomade"];
+                    prompt = `L'utilisateur a des douleurs. D'après la liste de produits, recommande la Pomade à 5 € en expliquant qu'elle est bonne pour les douleurs musculaires.`;
+                } else {
+                    recommendation = products["savon"];
+                    prompt = `D'après la conversation, recommande le Savon à 10 € en expliquant qu'il est idéal pour le nettoyage de la peau.`;
+                }
+                dialogueState = 'listening';
+            }
+
+            if (dialogueState === 'listening') {
+                const productMatch = Object.keys(products).find(key => userMessage.includes(key.replace(' ', '')));
+                const priceMatch = userMessage.includes('prix') || userMessage.includes('coûte');
+                const usageMatch = userMessage.includes('utilisation') || userMessage.includes('bon pour');
+                const symptomMatch = userMessage.includes('douleur') || userMessage.includes('bouton') || userMessage.includes('peau');
+
+                if (symptomMatch) {
+                    dialogueState = 'asking_symptom';
+                    prompt = `L'utilisateur a un problème de santé. Demande-lui s'il a un problème de peau ou de douleur.`;
+                } else if (productMatch && priceMatch) {
+                    prompt = `L'utilisateur demande le prix de ${productMatch}. Donne-lui le prix de cet article.`;
+                } else if (productMatch && usageMatch) {
+                    prompt = `L'utilisateur demande l'utilisation de ${productMatch}. Décris l'utilisation de cet article.`;
+                }
+            }
+            
+            const payload = {
+                contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const botResponse = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                loadingMessage.remove();
+
+                if (botResponse) {
+                    addMessage(botResponse, 'bot');
+                } else {
+                    addMessage("Désolé, je n'ai pas pu générer de réponse. Veuillez réessayer.", 'bot');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                loadingMessage.remove();
+                addMessage("Une erreur est survenue lors de la communication avec l'API.", 'bot');
+            } finally {
+                sendBtn.disabled = false;
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        window.onload = () => {
+             addMessage("🌿 Bienvenue chez Votre Bien-Être\nJe suis votre assistant virtuel, Vitalie ⚕️.\nPosez-moi vos questions sur nos produits ou votre santé, je suis là pour vous aider.", 'bot');
+        };
+    </script>
+</body>
+</html>

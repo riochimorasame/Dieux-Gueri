@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Articles - MedShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .loading-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            gap: 20px;
+        }
+
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stock-badge.in-stock {
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+
+        .stock-badge.low-stock {
+            color: #f59e0b;
+            border: 2px solid #f59e0b;
+        }
+
+        .stock-badge.out-of-stock {
+            color: #ef4444;
+            border: 2px solid #ef4444;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .category-savon { background: #dbeafe; color: #1e40af; }
+        .category-poudre { background: #fef3c7; color: #92400e; }
+        .category-pomade { background: #dcfce7; color: #166534; }
+        .category-autre { background: #f3e8ff; color: #6b21a8; }
+
+        .product-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .filter-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-container select,
+        .filter-container input {
+            padding: 10px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .filter-container select:focus,
+        .filter-container input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .no-products i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Votre bien-être</div>
+    <nav>
+        <ul>
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Accueil</a></li>
+            <li><a href="articles.html" class="active"><i class="fa-solid fa-bag-shopping"></i> Nos Articles</a></li>
+            <li><a href="chatbot.html"><i class="fa-solid fa-robot"></i> Assistant Virtuel</a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+            <li><a href="admin.html"><i class="fa-solid fa-user-shield"></i> Admin</a></li>
+        </ul>
+    </nav>
+</header>
+
+<section class="products">
+    <h2><i class="fa-solid fa-bag-shopping"></i> Nos Articles</h2>
+    
+    <div class="filter-container">
+        <div style="flex: 1; min-width: 250px;">
+            <input type="text" id="searchInput" placeholder="🔍 Rechercher un produit..." style="width: 100%;">
+        </div>
+        <select id="categoryFilter" style="min-width: 200px;">
+            <option value="">Toutes les catégories</option>
+            <option value="savon">Savon</option>
+            <option value="poudre">Poudre médicale</option>
+            <option value="pomade">Pomade</option>
+            <option value="autre">Autre</option>
+        </select>
+        <select id="sortFilter" style="min-width: 200px;">
+            <option value="name-asc">Nom (A-Z)</option>
+            <option value="name-desc">Nom (Z-A)</option>
+            <option value="price-asc">Prix (croissant)</option>
+            <option value="price-desc">Prix (décroissant)</option>
+            <option value="recent">Plus récents</option>
+        </select>
+        <button onclick="resetFilters()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+            <i class="fa-solid fa-redo"></i> Réinitialiser
+        </button>
+    </div>
+
+    <div id="loadingContainer" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p style="font-size: 18px; color: #666;">Chargement des produits...</p>
+    </div>
+
+    <div class="product-list" id="productList" style="display: none;"></div>
+
+    <div id="noProducts" class="no-products" style="display: none;">
+        <i class="fa-solid fa-box-open"></i>
+        <h3>Aucun produit trouvé</h3>
+        <p>Essayez de modifier vos filtres de recherche</p>
+    </div>
+</section>
+
+<button class="cart-button" id="cart-button">
+    <i class="fa-solid fa-cart-shopping"></i> <span id="cart-count">0</span>
+</button>
+
+<div id="cart-modal" class="cart-modal">
+    <div class="cart-modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Votre Panier</h2>
+        <ul id="cart-items"></ul>
+        <div id="cart-modal-footer">
+            <div id="cart-total"></div>
+            <button id="checkout-button">Procéder à l'achat</button>
+        </div>
+    </div>
+</div>
+
+<div id="cart-notification" class="cart-notification">
+    <img id="notification-img" src="" alt="Produit ajouté">
+    <span id="notification-message" class="message"></span>
+</div>
+
+<footer>
+    <p>&copy; 2025 MedShop | <a href="#"><i class="fa-solid fa-gavel"></i> Mentions légales</a> | <a href="#"><i class="fa-solid fa-shield-dog"></i> Politique de confidentialité</a> | <a href="contact.html">Contact</a></p>
+</footer>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getFirestore, collection, getDocs, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+    // ⚠️ REMPLACEZ PAR VOS PROPRES CLÉS FIREBASE
+    const firebaseConfig = {
+         apiKey: "AIzaSyD0b69uQMJzpJagMgKrBqif26kv3wtXZwc",
+  authDomain: "medshop-d78e1.firebaseapp.com",
+  projectId: "medshop-d78e1",
+  storageBucket: "medshop-d78e1.firebasestorage.app",
+  messagingSenderId: "972474612085",
+  appId: "1:972474612085:web:c2314bdc99eb652084fb3c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let allProducts = [];
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        allProducts = [];
+        snapshot.forEach((doc) => {
+            allProducts.push({ id: doc.id, ...doc.data() });
+        });
+        
+        document.getElementById('loadingContainer').style.display = 'none';
+        document.getElementById('productList').style.display = 'grid';
+        
+        displayProducts(allProducts);
+    }, (error) => {
+        console.error("Erreur:", error);
+        document.getElementById('loadingContainer').innerHTML = `
+            <i class="fa-solid fa-exclamation-triangle" style="font-size: 48px; color: #ef4444;"></i>
+            <p style="color: #ef4444; font-weight: 600;">Erreur de chargement des produits</p>
+            <p style="color: #666;">Vérifiez votre configuration Firebase</p>
+        `;
+    });
+
+    function displayProducts(products) {
+        const productList = document.getElementById('productList');
+        const noProducts = document.getElementById('noProducts');
+
+        if (products.length === 0) {
+            productList.style.display = 'none';
+            noProducts.style.display = 'block';
+            return;
+        }
+
+        noProducts.style.display = 'none';
+        productList.style.display = 'grid';
+        
+        productList.innerHTML = products.map(product => {
+            const stockStatus = product.stock > 10 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-of-stock';
+            const stockText = product.stock > 10 ? `✓ En stock (${product.stock})` : 
+                            product.stock > 0 ? `⚠ Stock faible (${product.stock})` : 
+                            '✗ Rupture';
+
+            return `
+                <div class="product" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-category="${product.category}">
+                    <div style="position: relative;">
+                        <img src="${product.imageUrl}" alt="${product.name}"/>
+                        <span class="stock-badge ${stockStatus}">${stockText}</span>
+                    </div>
+                    <span class="category-badge category-${product.category}">${product.category}</span>
+                    <p style="font-size: 22px; font-weight: bold; color: #007bff; margin: 10px 0;">
+                        ${product.name}
+                    </p>
+                    <p class="product-description">${product.description}</p>
+                    <p style="font-size: 24px; font-weight: bold; color: #28a745; margin: 10px 0;">
+                        ${product.price} FCFA
+                    </p>
+                    <div class="quantity-selector">
+                        <button class="decrement-btn" ${product.stock === 0 ? 'disabled' : ''}>-</button>
+                        <span class="quantity-count">0</span>
+                        <button class="increment-btn" ${product.stock === 0 ? 'disabled' : ''}>+</button>
+                    </div>
+                    <button class="add-to-cart" disabled ${product.stock === 0 ? 'style="background: #ccc; cursor: not-allowed;"' : ''}>
+                        <i class="fa-solid fa-cart-plus"></i> 
+                        ${product.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+        attachProductEvents();
+    }
+
+    function attachProductEvents() {
+        document.querySelectorAll('.product').forEach(product => {
+            const decrementBtn = product.querySelector('.decrement-btn');
+            const incrementBtn = product.querySelector('.increment-btn');
+            const quantitySpan = product.querySelector('.quantity-count');
+            const addToCartBtn = product.querySelector('.add-to-cart');
+            
+            const productData = allProducts.find(p => p.id === product.dataset.id);
+            const maxStock = productData ? productData.stock : 0;
+
+            incrementBtn.addEventListener('click', () => {
+                let quantity = parseInt(quantitySpan.textContent);
+                if (quantity < maxStock) {
+                    quantity++;
+                    quantitySpan.textContent = quantity;
+                    addToCartBtn.disabled = false;
+                }
+            });
+
+            decrementBtn.addEventListener('click', () => {
+                let quantity = parseInt(quantitySpan.textContent);
+                if (quantity > 0) {
+                    quantity--;
+                    quantitySpan.textContent = quantity;
+                }
+                if (quantity === 0) {
+                    addToCartBtn.disabled = true;
+                }
+            });
+
+            addToCartBtn.addEventListener('click', () => {
+                const quantity = parseInt(quantitySpan.textContent);
+                if (quantity > 0 && maxStock > 0) {
+                    const existingItem = cart.find(item => item.id === product.dataset.id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += quantity;
+                    } else {
+                        cart.push({
+                            id: product.dataset.id,
+                            name: product.dataset.name,
+                            price: parseFloat(product.dataset.price),
+                            img: product.querySelector('img').src,
+                            quantity: quantity
+                        });
+                    }
+
+                    updateCartDisplay();
+                    showNotification({ 
+                        name: product.dataset.name, 
+                        img: product.querySelector('img').src 
+                    });
+
+                    quantitySpan.textContent = "0";
+                    addToCartBtn.disabled = true;
+                }
+            });
+        });
+    }
+
+    window.filterAndSortProducts = function() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const categoryFilter = document.getElementById('categoryFilter').value;
+        const sortFilter = document.getElementById('sortFilter').value;
+
+        let filtered = allProducts.filter(product => {
+            const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+                                product.description.toLowerCase().includes(searchTerm);
+            const matchesCategory = !categoryFilter || product.category === categoryFilter;
+            return matchesSearch && matchesCategory;
+        });
+
+        switch(sortFilter) {
+            case 'name-asc':
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'name-desc':
+                filtered.sort((a, b) => b.name.localeCompare(a.name));
+                break;
+            case 'price-asc':
+                filtered.sort((a, b) => a.price - b.price);
+                break;
+            case 'price-desc':
+                filtered.sort((a, b) => b.price - a.price);
+                break;
+            case 'recent':
+                filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                break;
+        }
+
+        displayProducts(filtered);
+    };
+
+    window.resetFilters = function() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('sortFilter').value = 'name-asc';
+        displayProducts(allProducts);
+    };
+
+    document.getElementById('searchInput').addEventListener('input', filterAndSortProducts);
+    document.getElementById('categoryFilter').addEventListener('change', filterAndSortProducts);
+    document.getElementById('sortFilter').addEventListener('change', filterAndSortProducts);
+
+    function updateCartDisplay() {
+        const cartCountSpan = document.getElementById('cart-count');
+        const cartItemsList = document.getElementById('cart-items');
+        const cartTotalDiv = document.getElementById('cart-total');
+
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        cartCountSpan.textContent = totalItems;
+
+        if (cartItemsList) {
+            cartItemsList.innerHTML = cart.map((item, index) => `
+                <li class="cart-item">
+                    <img src="${item.img}" alt="${item.name}" class="cart-item-img">
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <p>${item.price} FCFA</p>
+                        <div class="cart-item-quantity">Quantité : ${item.quantity}</div>
+                    </div>
+                    <button class="remove-item" data-index="${index}">&times;</button>
+                </li>
+            `).join('');
+
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    cart.splice(index, 1);
+                    updateCartDisplay();
+                });
+            });
+        }
+
+        if (cartTotalDiv) cartTotalDiv.textContent = `Total : ${total} FCFA`;
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function showNotification(item) {
+        const notification = document.getElementById('cart-notification');
+        const notificationImg = document.getElementById('notification-img');
+        const notificationMessage = document.getElementById('notification-message');
+        
+        notificationImg.src = item.img;
+        notificationMessage.textContent = `${item.name} a été ajouté au panier !`;
+        notification.classList.add('visible');
+        
+        setTimeout(() => {
+            notification.classList.remove('visible');
+        }, 3000);
+    }
+
+    const cartButton = document.getElementById('cart-button');
+    const cartModal = document.getElementById('cart-modal');
+    const closeButton = document.querySelector('.close-button');
+    const checkoutButton = document.getElementById('checkout-button');
+
+    if (cartButton) {
+        cartButton.addEventListener('click', () => {
+            updateCartDisplay();
+            cartModal.style.display = 'block';
+        });
+    }
+
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            cartModal.style.display = 'none';
+        });
+    }
+
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert("Votre panier est vide.");
+                return;
+            }
+
+            const whatsappNumber = "22870445866";
+            let orderMessage = "Salut ! 👋 J'aimerais passer la commande suivante :\n\n";
+            let total = 0;
+
+            cart.forEach(item => {
+                orderMessage += `🛒 ${item.name} x${item.quantity} - ${item.price * item.quantity} FCFA\n`;
+                total += item.price * item.quantity;
+            });
+
+            orderMessage += `\n💰 Total : ${total} FCFA\n\nMerci de me donner les détails de la livraison et du paiement ! 🙏`;
+
+            const encodedMessage = encodeURIComponent(orderMessage);
+            window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+        });
+    }
+
+    updateCartDisplay();
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>

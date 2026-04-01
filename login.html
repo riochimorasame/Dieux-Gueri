@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Admin - MedShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --blue: #007bff;
+            --blue-dark: #0056b3;
+            --blue-light: #e8f4ff;
+            --green: #28a745;
+            --text: #1a1a2e;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --white: #fff;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #f0f6ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--white);
+            border-bottom: 2px solid var(--blue-light);
+            padding: 14px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,123,255,0.08);
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--blue); }
+        .logo span { color: var(--green); }
+        header a { text-decoration: none; color: var(--muted); font-weight: 700; font-size: 0.9rem; transition: color 0.2s; }
+        header a:hover { color: var(--blue); }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .login-wrapper {
+            display: flex;
+            max-width: 880px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 8px 40px rgba(0,123,255,0.13);
+            overflow: hidden;
+        }
+
+        /* Panneau gauche */
+        .login-visual {
+            flex: 1;
+            background: linear-gradient(145deg, #007bff 0%, #0056b3 60%, #003d82 100%);
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-visual::before {
+            content: '';
+            position: absolute;
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            top: -80px; right: -80px;
+        }
+        .login-visual::after {
+            content: '';
+            position: absolute;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+            bottom: -60px; left: -60px;
+        }
+        .visual-icon {
+            background: rgba(255,255,255,0.15);
+            width: 70px; height: 70px;
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: white;
+            margin-bottom: 28px;
+        }
+        .login-visual h2 { color: white; font-size: 1.8rem; font-weight: 800; margin-bottom: 14px; line-height: 1.3; }
+        .login-visual p { color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.6; margin-bottom: 30px; }
+        .visual-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .visual-features li {
+            display: flex; align-items: center; gap: 10px;
+            color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 700;
+        }
+        .visual-features li i {
+            background: rgba(255,255,255,0.2);
+            width: 30px; height: 30px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; flex-shrink: 0;
+        }
+
+        /* Panneau droit */
+        .login-form {
+            flex: 1;
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-form h1 { font-size: 1.7rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+        .login-form .subtitle { color: var(--muted); font-size: 0.95rem; margin-bottom: 36px; }
+
+        .error-msg {
+            display: none;
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: #991b1b;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            align-items: center;
+            gap: 10px;
+        }
+        .error-msg.visible { display: flex; }
+
+        .btn-google {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 15px 20px;
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .btn-google:hover { border-color: var(--blue); box-shadow: 0 4px 16px rgba(0,123,255,0.15); transform: translateY(-1px); }
+        .btn-google.loading { opacity: 0.7; pointer-events: none; }
+        .google-icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 28px 0;
+            color: var(--muted); font-size: 0.85rem; font-weight: 700;
+        }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        .security-notice {
+            background: var(--blue-light);
+            border: 1px solid rgba(0,123,255,0.2);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex; gap: 12px; align-items: flex-start;
+        }
+        .security-notice i { color: var(--blue); font-size: 1.1rem; margin-top: 2px; flex-shrink: 0; }
+        .security-notice p { font-size: 0.85rem; color: #1e40af; line-height: 1.5; font-weight: 700; }
+
+        /* Loader */
+        .checking-auth {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 40px;
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid var(--blue-light);
+            border-top: 4px solid var(--blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            font-family: 'Nunito', sans-serif;
+        }
+        footer a { color: var(--blue); text-decoration: none; font-weight: 700; }
+
+        @media (max-width: 640px) {
+            .login-visual { display: none; }
+            .login-form { padding: 36px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Med<span>Shop</span></div>
+    <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Retour au site</a>
+</header>
+
+<main>
+    <div class="login-wrapper">
+
+        <div class="login-visual">
+            <div class="visual-icon"><i class="fa-solid fa-user-shield"></i></div>
+            <h2>Espace Administrateur</h2>
+            <p>Gérez votre boutique en toute sécurité depuis ce tableau de bord.</p>
+            <ul class="visual-features">
+                <li><i class="fa-solid fa-box"></i> Gestion des produits</li>
+                <li><i class="fa-solid fa-pen-to-square"></i> Ajout &amp; modification</li>
+                <li><i class="fa-solid fa-chart-line"></i> Statistiques en temps réel</li>
+                <li><i class="fa-solid fa-lock"></i> Accès sécurisé via Google</li>
+            </ul>
+        </div>
+
+        <div class="login-form" id="loginForm" style="display:none">
+            <h1>Connexion</h1>
+            <p class="subtitle">Connectez-vous avec votre compte Google autorisé.</p>
+
+            <div class="error-msg" id="errorMsg">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="errorText">Accès refusé.</span>
+            </div>
+
+            <button class="btn-google" id="googleBtn" onclick="loginWithGoogle()">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                <span id="btnText">Continuer avec Google</span>
+            </button>
+
+            <div class="divider">accès restreint</div>
+
+            <div class="security-notice">
+                <i class="fa-solid fa-shield-halved"></i>
+                <p>Seuls les comptes Google autorisés peuvent accéder à ce panneau d'administration.</p>
+            </div>
+        </div>
+
+        <div class="checking-auth" id="checkingAuth">
+            <div class="spinner"></div>
+            <p style="color:#6b7280;font-family:'Nunito',sans-serif;font-weight:700">Vérification en cours...</p>
+        </div>
+
+    </div>
+</main>
+
+<footer>&copy; 2025 MedShop &mdash; <a href="index.html">Retour à la boutique</a></footer>
+
+<script type="module">
+    import { initializeApp }        from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged }
+                                    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+    // ════════════════════════════════════════════════
+    // 🔧 VOTRE CONFIGURATION FIREBASE
+    // ════════════════════════════════════════════════
+    const firebaseConfig = {
+        apiKey:            "VOTRE_API_KEY",
+        authDomain:        "VOTRE_PROJECT_ID.firebaseapp.com",
+        projectId:         "VOTRE_PROJECT_ID",
+        storageBucket:     "VOTRE_PROJECT_ID.appspot.com",
+        messagingSenderId: "VOTRE_MESSAGING_SENDER_ID",
+        appId:             "VOTRE_APP_ID"
+    };
+
+    // 🔧 EMAILS AUTORISÉS EN TANT QU'ADMIN
+    const AUTHORIZED_EMAILS = [
+        "votre.email@gmail.com"
+    ];
+    // ════════════════════════════════════════════════
+
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    const loginFormEl  = document.getElementById('loginForm');
+    const checkingEl   = document.getElementById('checkingAuth');
+    const errorMsgEl   = document.getElementById('errorMsg');
+    const errorTextEl  = document.getElementById('errorText');
+    const googleBtn    = document.getElementById('googleBtn');
+    const btnText      = document.getElementById('btnText');
+
+    checkingEl.style.display = 'flex';
+
+    onAuthStateChanged(auth, (user) => {
+        if (user && AUTHORIZED_EMAILS.includes(user.email)) {
+            window.location.href = 'admin.html';
+        } else {
+            checkingEl.style.display  = 'none';
+            loginFormEl.style.display = 'flex';
+            loginFormEl.style.flexDirection = 'column';
+        }
+    });
+
+    window.loginWithGoogle = async function () {
+        googleBtn.classList.add('loading');
+        btnText.textContent = 'Connexion...';
+        hideError();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            if (!AUTHORIZED_EMAILS.includes(result.user.email)) {
+                await auth.signOut();
+                showError(`Accès refusé. Le compte ${result.user.email} n'est pas autorisé.`);
+                return;
+            }
+            window.location.href = 'admin.html';
+        } catch (err) {
+            if (err.code === 'auth/popup-closed-by-user') {
+                showError('Connexion annulée. Réessayez.');
+            } else {
+                showError('Erreur de connexion. Vérifiez votre connexion internet.');
+            }
+        } finally {
+            googleBtn.classList.remove('loading');
+            btnText.textContent = 'Continuer avec Google';
+        }
+    };
+
+    function showError(msg) { errorTextEl.textContent = msg; errorMsgEl.classList.add('visible'); }
+    function hideError()    { errorMsgEl.classList.remove('visible'); }
+</script>
+</body>
+</html>

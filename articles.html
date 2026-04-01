@@ -7,76 +7,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
+        /* Spinner */
         .loading-spinner {
             display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
+            width: 48px; height: 48px;
+            border: 5px solid #f0f6ff;
             border-top: 5px solid #007bff;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        @keyframes spin { to { transform: rotate(360deg); } }
         .loading-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 400px;
-            gap: 20px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            min-height: 400px; gap: 20px;
         }
 
+        /* Badges stock */
         .stock-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(255,255,255,0.96);
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 700;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
+        .stock-badge.in-stock  { color: #10b981; border: 2px solid #10b981; }
+        .stock-badge.low-stock { color: #f59e0b; border: 2px solid #f59e0b; }
+        .stock-badge.out-of-stock { color: #ef4444; border: 2px solid #ef4444; }
 
-        .stock-badge.in-stock {
-            color: #10b981;
-            border: 2px solid #10b981;
-        }
-
-        .stock-badge.low-stock {
-            color: #f59e0b;
-            border: 2px solid #f59e0b;
-        }
-
-        .stock-badge.out-of-stock {
-            color: #ef4444;
-            border: 2px solid #ef4444;
-        }
-
+        /* Badges catégorie */
         .category-badge {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 10px;
+            padding: 4px 12px; border-radius: 12px;
+            font-size: 12px; font-weight: 700;
+            text-transform: uppercase; margin-bottom: 10px;
         }
-
-        .category-savon { background: #dbeafe; color: #1e40af; }
+        .category-savon  { background: #dbeafe; color: #1e40af; }
         .category-poudre { background: #fef3c7; color: #92400e; }
         .category-pomade { background: #dcfce7; color: #166534; }
-        .category-autre { background: #f3e8ff; color: #6b21a8; }
+        .category-autre  { background: #f3e8ff; color: #6b21a8; }
 
+        /* Description tronquée */
         .product-description {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.6;
+            font-size: 14px; color: #666; line-height: 1.6;
             margin-bottom: 15px;
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -84,44 +57,40 @@
             overflow: hidden;
         }
 
+        /* Barre de filtres */
         .filter-container {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
+            padding: 18px 20px;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 28px;
+            display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
         }
-
         .filter-container select,
         .filter-container input {
-            padding: 10px 15px;
+            padding: 10px 14px;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s;
+            border-radius: 10px;
+            font-size: 14px; font-family: inherit;
+            transition: border-color 0.2s;
+            background: white;
         }
-
         .filter-container select:focus,
-        .filter-container input:focus {
-            outline: none;
-            border-color: #007bff;
+        .filter-container input:focus { outline: none; border-color: #007bff; }
+        .filter-container button {
+            padding: 10px 20px;
+            background: #007bff; color: white;
+            border: none; border-radius: 10px;
+            cursor: pointer; font-weight: 700; font-size: 14px;
+            font-family: inherit;
+            transition: background 0.2s;
         }
+        .filter-container button:hover { background: #0056b3; }
 
-        .no-products {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6b7280;
-        }
-
-        .no-products i {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
+        /* État vide */
+        .no-products { text-align: center; padding: 60px 20px; color: #6b7280; }
+        .no-products i { font-size: 64px; margin-bottom: 20px; opacity: 0.3; display: block; }
+        .no-products h3 { font-size: 1.1rem; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -134,45 +103,42 @@
             <li><a href="articles.html" class="active"><i class="fa-solid fa-bag-shopping"></i> Nos Articles</a></li>
             <li><a href="chatbot.html"><i class="fa-solid fa-robot"></i> Assistant Virtuel</a></li>
             <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Contact</a></li>
-            <li><a href="admin.html"><i class="fa-solid fa-user-shield"></i> Admin</a></li>
         </ul>
     </nav>
 </header>
 
 <section class="products">
     <h2><i class="fa-solid fa-bag-shopping"></i> Nos Articles</h2>
-    
+
     <div class="filter-container">
-        <div style="flex: 1; min-width: 250px;">
-            <input type="text" id="searchInput" placeholder="🔍 Rechercher un produit..." style="width: 100%;">
+        <div style="flex:1;min-width:240px">
+            <input type="text" id="searchInput" placeholder="🔍 Rechercher un produit..." style="width:100%" oninput="filterAndSort()">
         </div>
-        <select id="categoryFilter" style="min-width: 200px;">
+        <select id="categoryFilter" style="min-width:190px" onchange="filterAndSort()">
             <option value="">Toutes les catégories</option>
             <option value="savon">Savon</option>
             <option value="poudre">Poudre médicale</option>
             <option value="pomade">Pomade</option>
             <option value="autre">Autre</option>
         </select>
-        <select id="sortFilter" style="min-width: 200px;">
-            <option value="name-asc">Nom (A-Z)</option>
-            <option value="name-desc">Nom (Z-A)</option>
-            <option value="price-asc">Prix (croissant)</option>
-            <option value="price-desc">Prix (décroissant)</option>
+        <select id="sortFilter" style="min-width:190px" onchange="filterAndSort()">
             <option value="recent">Plus récents</option>
+            <option value="name-asc">Nom (A→Z)</option>
+            <option value="name-desc">Nom (Z→A)</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
         </select>
-        <button onclick="resetFilters()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-            <i class="fa-solid fa-redo"></i> Réinitialiser
-        </button>
+        <button onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Réinitialiser</button>
     </div>
 
     <div id="loadingContainer" class="loading-container">
         <div class="loading-spinner"></div>
-        <p style="font-size: 18px; color: #666;">Chargement des produits...</p>
+        <p style="font-size:17px;color:#666;font-weight:600">Chargement des produits...</p>
     </div>
 
-    <div class="product-list" id="productList" style="display: none;"></div>
+    <div class="product-list" id="productList" style="display:none"></div>
 
-    <div id="noProducts" class="no-products" style="display: none;">
+    <div id="noProducts" class="no-products" style="display:none">
         <i class="fa-solid fa-box-open"></i>
         <h3>Aucun produit trouvé</h3>
         <p>Essayez de modifier vos filtres de recherche</p>
@@ -206,286 +172,231 @@
 
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-    import { getFirestore, collection, getDocs, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+    import { getFirestore, collection, query, orderBy, onSnapshot }
+        from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-    // ⚠️ REMPLACEZ PAR VOS PROPRES CLÉS FIREBASE
+    // ════════════════════════════════════════════════
+    // 🔧 VOTRE CONFIGURATION FIREBASE
+    // ════════════════════════════════════════════════
     const firebaseConfig = {
-         apiKey: "AIzaSyD0b69uQMJzpJagMgKrBqif26kv3wtXZwc",
-  authDomain: "medshop-d78e1.firebaseapp.com",
-  projectId: "medshop-d78e1",
-  storageBucket: "medshop-d78e1.firebasestorage.app",
-  messagingSenderId: "972474612085",
-  appId: "1:972474612085:web:c2314bdc99eb652084fb3c"
+        apiKey:            "VOTRE_API_KEY",
+        authDomain:        "VOTRE_PROJECT_ID.firebaseapp.com",
+        projectId:         "VOTRE_PROJECT_ID",
+        storageBucket:     "VOTRE_PROJECT_ID.appspot.com",
+        messagingSenderId: "VOTRE_MESSAGING_SENDER_ID",
+        appId:             "VOTRE_APP_ID"
     };
+    // ════════════════════════════════════════════════
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db  = getFirestore(app);
 
     let allProducts = [];
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snapshot) => {
+    // ── LIRE LE PARAMÈTRE URL ?category=... ─────────
+    const urlParams    = new URLSearchParams(window.location.search);
+    const categoryFromUrl = urlParams.get('category');
+
+    // ── CHARGEMENT TEMPS RÉEL ────────────────────────
+    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+    onSnapshot(q, (snap) => {
         allProducts = [];
-        snapshot.forEach((doc) => {
-            allProducts.push({ id: doc.id, ...doc.data() });
-        });
-        
+        snap.forEach(d => allProducts.push({ id: d.id, ...d.data() }));
+
         document.getElementById('loadingContainer').style.display = 'none';
         document.getElementById('productList').style.display = 'grid';
-        
-        displayProducts(allProducts);
-    }, (error) => {
-        console.error("Erreur:", error);
+
+        // Appliquer le filtre URL si présent
+        if (categoryFromUrl) {
+            document.getElementById('categoryFilter').value = categoryFromUrl;
+        }
+
+        filterAndSort();
+    }, (err) => {
+        console.error(err);
         document.getElementById('loadingContainer').innerHTML = `
-            <i class="fa-solid fa-exclamation-triangle" style="font-size: 48px; color: #ef4444;"></i>
-            <p style="color: #ef4444; font-weight: 600;">Erreur de chargement des produits</p>
-            <p style="color: #666;">Vérifiez votre configuration Firebase</p>
+            <i class="fa-solid fa-exclamation-triangle" style="font-size:48px;color:#ef4444"></i>
+            <p style="color:#ef4444;font-weight:700">Erreur de chargement des produits</p>
+            <p style="color:#666">Vérifiez votre configuration Firebase</p>
         `;
     });
 
-    function displayProducts(products) {
-        const productList = document.getElementById('productList');
-        const noProducts = document.getElementById('noProducts');
+    // ── FILTRE + TRI ─────────────────────────────────
+    window.filterAndSort = function () {
+        const search   = document.getElementById('searchInput').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+        const sort     = document.getElementById('sortFilter').value;
 
-        if (products.length === 0) {
-            productList.style.display = 'none';
-            noProducts.style.display = 'block';
-            return;
+        let list = allProducts.filter(p =>
+            (!search || p.name.toLowerCase().includes(search) || p.description.toLowerCase().includes(search)) &&
+            (!category || p.category === category)
+        );
+
+        switch (sort) {
+            case 'name-asc':   list.sort((a, b) => a.name.localeCompare(b.name)); break;
+            case 'name-desc':  list.sort((a, b) => b.name.localeCompare(a.name)); break;
+            case 'price-asc':  list.sort((a, b) => a.price - b.price); break;
+            case 'price-desc': list.sort((a, b) => b.price - a.price); break;
+            case 'recent':     list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); break;
         }
 
-        noProducts.style.display = 'none';
-        productList.style.display = 'grid';
-        
-        productList.innerHTML = products.map(product => {
-            const stockStatus = product.stock > 10 ? 'in-stock' : product.stock > 0 ? 'low-stock' : 'out-of-stock';
-            const stockText = product.stock > 10 ? `✓ En stock (${product.stock})` : 
-                            product.stock > 0 ? `⚠ Stock faible (${product.stock})` : 
-                            '✗ Rupture';
+        displayProducts(list);
+    };
 
-            return `
-                <div class="product" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-category="${product.category}">
-                    <div style="position: relative;">
-                        <img src="${product.imageUrl}" alt="${product.name}"/>
-                        <span class="stock-badge ${stockStatus}">${stockText}</span>
-                    </div>
-                    <span class="category-badge category-${product.category}">${product.category}</span>
-                    <p style="font-size: 22px; font-weight: bold; color: #007bff; margin: 10px 0;">
-                        ${product.name}
-                    </p>
-                    <p class="product-description">${product.description}</p>
-                    <p style="font-size: 24px; font-weight: bold; color: #28a745; margin: 10px 0;">
-                        ${product.price} FCFA
-                    </p>
-                    <div class="quantity-selector">
-                        <button class="decrement-btn" ${product.stock === 0 ? 'disabled' : ''}>-</button>
-                        <span class="quantity-count">0</span>
-                        <button class="increment-btn" ${product.stock === 0 ? 'disabled' : ''}>+</button>
-                    </div>
-                    <button class="add-to-cart" disabled ${product.stock === 0 ? 'style="background: #ccc; cursor: not-allowed;"' : ''}>
-                        <i class="fa-solid fa-cart-plus"></i> 
-                        ${product.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
-                    </button>
+    window.resetFilters = function () {
+        document.getElementById('searchInput').value   = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('sortFilter').value    = 'recent';
+        filterAndSort();
+    };
+
+    // ── AFFICHAGE ────────────────────────────────────
+    function displayProducts(list) {
+        const grid  = document.getElementById('productList');
+        const empty = document.getElementById('noProducts');
+
+        if (!list.length) {
+            grid.style.display  = 'none';
+            empty.style.display = 'block';
+            return;
+        }
+        empty.style.display = 'none';
+        grid.style.display  = 'grid';
+
+        const stockClass = s => s > 10 ? 'in-stock' : s > 0 ? 'low-stock' : 'out-of-stock';
+        const stockText  = s => s > 10 ? `✓ En stock (${s})` : s > 0 ? `⚠ Stock faible (${s})` : '✗ Rupture';
+
+        grid.innerHTML = list.map(p => `
+            <div class="product" data-id="${esc(p.id)}" data-name="${esc(p.name)}" data-price="${p.price}">
+                <div style="position:relative">
+                    <img src="${esc(p.imageUrl)}" alt="${esc(p.name)}" onerror="this.src='https://placehold.co/300x200?text=Produit'"/>
+                    <span class="stock-badge ${stockClass(p.stock)}">${stockText(p.stock)}</span>
                 </div>
-            `;
-        }).join('');
+                <span class="category-badge category-${esc(p.category)}">${esc(p.category)}</span>
+                <p style="font-size:21px;font-weight:800;color:#007bff;margin:10px 0">${esc(p.name)}</p>
+                <p class="product-description">${esc(p.description)}</p>
+                <p style="font-size:23px;font-weight:800;color:#28a745;margin:10px 0">${Number(p.price).toLocaleString('fr-FR')} FCFA</p>
+                <div class="quantity-selector">
+                    <button class="decrement-btn" ${p.stock === 0 ? 'disabled' : ''}>-</button>
+                    <span class="quantity-count">0</span>
+                    <button class="increment-btn" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                </div>
+                <button class="add-to-cart" disabled ${p.stock === 0 ? 'style="background:#ccc;cursor:not-allowed"' : ''}>
+                    <i class="fa-solid fa-cart-plus"></i>
+                    ${p.stock === 0 ? 'Rupture de stock' : 'Ajouter au panier'}
+                </button>
+            </div>
+        `).join('');
 
         attachProductEvents();
     }
 
+    // ── ÉVÉNEMENTS PRODUITS ──────────────────────────
     function attachProductEvents() {
-        document.querySelectorAll('.product').forEach(product => {
-            const decrementBtn = product.querySelector('.decrement-btn');
-            const incrementBtn = product.querySelector('.increment-btn');
-            const quantitySpan = product.querySelector('.quantity-count');
-            const addToCartBtn = product.querySelector('.add-to-cart');
-            
-            const productData = allProducts.find(p => p.id === product.dataset.id);
-            const maxStock = productData ? productData.stock : 0;
+        document.querySelectorAll('.product').forEach(card => {
+            const dec     = card.querySelector('.decrement-btn');
+            const inc     = card.querySelector('.increment-btn');
+            const qtySpan = card.querySelector('.quantity-count');
+            const addBtn  = card.querySelector('.add-to-cart');
+            const prod    = allProducts.find(p => p.id === card.dataset.id);
+            const maxStock = prod ? prod.stock : 0;
 
-            incrementBtn.addEventListener('click', () => {
-                let quantity = parseInt(quantitySpan.textContent);
-                if (quantity < maxStock) {
-                    quantity++;
-                    quantitySpan.textContent = quantity;
-                    addToCartBtn.disabled = false;
-                }
+            inc.addEventListener('click', () => {
+                let q = parseInt(qtySpan.textContent);
+                if (q < maxStock) { q++; qtySpan.textContent = q; addBtn.disabled = false; }
             });
-
-            decrementBtn.addEventListener('click', () => {
-                let quantity = parseInt(quantitySpan.textContent);
-                if (quantity > 0) {
-                    quantity--;
-                    quantitySpan.textContent = quantity;
-                }
-                if (quantity === 0) {
-                    addToCartBtn.disabled = true;
-                }
+            dec.addEventListener('click', () => {
+                let q = parseInt(qtySpan.textContent);
+                if (q > 0) { q--; qtySpan.textContent = q; }
+                if (parseInt(qtySpan.textContent) === 0) addBtn.disabled = true;
             });
-
-            addToCartBtn.addEventListener('click', () => {
-                const quantity = parseInt(quantitySpan.textContent);
-                if (quantity > 0 && maxStock > 0) {
-                    const existingItem = cart.find(item => item.id === product.dataset.id);
-                    
-                    if (existingItem) {
-                        existingItem.quantity += quantity;
-                    } else {
+            addBtn.addEventListener('click', () => {
+                const qty = parseInt(qtySpan.textContent);
+                if (qty > 0 && maxStock > 0) {
+                    const existing = cart.find(i => i.id === card.dataset.id);
+                    if (existing) { existing.quantity += qty; }
+                    else {
                         cart.push({
-                            id: product.dataset.id,
-                            name: product.dataset.name,
-                            price: parseFloat(product.dataset.price),
-                            img: product.querySelector('img').src,
-                            quantity: quantity
+                            id: card.dataset.id,
+                            name: card.dataset.name,
+                            price: parseFloat(card.dataset.price),
+                            img: card.querySelector('img').src,
+                            quantity: qty
                         });
                     }
-
                     updateCartDisplay();
-                    showNotification({ 
-                        name: product.dataset.name, 
-                        img: product.querySelector('img').src 
-                    });
-
-                    quantitySpan.textContent = "0";
-                    addToCartBtn.disabled = true;
+                    showNotification({ name: card.dataset.name, img: card.querySelector('img').src });
+                    qtySpan.textContent = '0';
+                    addBtn.disabled = true;
                 }
             });
         });
     }
 
-    window.filterAndSortProducts = function() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const categoryFilter = document.getElementById('categoryFilter').value;
-        const sortFilter = document.getElementById('sortFilter').value;
-
-        let filtered = allProducts.filter(product => {
-            const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
-                                product.description.toLowerCase().includes(searchTerm);
-            const matchesCategory = !categoryFilter || product.category === categoryFilter;
-            return matchesSearch && matchesCategory;
-        });
-
-        switch(sortFilter) {
-            case 'name-asc':
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
-                break;
-            case 'name-desc':
-                filtered.sort((a, b) => b.name.localeCompare(a.name));
-                break;
-            case 'price-asc':
-                filtered.sort((a, b) => a.price - b.price);
-                break;
-            case 'price-desc':
-                filtered.sort((a, b) => b.price - a.price);
-                break;
-            case 'recent':
-                filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                break;
-        }
-
-        displayProducts(filtered);
-    };
-
-    window.resetFilters = function() {
-        document.getElementById('searchInput').value = '';
-        document.getElementById('categoryFilter').value = '';
-        document.getElementById('sortFilter').value = 'name-asc';
-        displayProducts(allProducts);
-    };
-
-    document.getElementById('searchInput').addEventListener('input', filterAndSortProducts);
-    document.getElementById('categoryFilter').addEventListener('change', filterAndSortProducts);
-    document.getElementById('sortFilter').addEventListener('change', filterAndSortProducts);
-
+    // ── PANIER ───────────────────────────────────────
     function updateCartDisplay() {
-        const cartCountSpan = document.getElementById('cart-count');
-        const cartItemsList = document.getElementById('cart-items');
-        const cartTotalDiv = document.getElementById('cart-total');
+        const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
+        const total      = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+        document.getElementById('cart-count').textContent = totalItems;
 
-        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-        cartCountSpan.textContent = totalItems;
-
-        if (cartItemsList) {
-            cartItemsList.innerHTML = cart.map((item, index) => `
+        const list = document.getElementById('cart-items');
+        if (list) {
+            list.innerHTML = cart.map((item, idx) => `
                 <li class="cart-item">
-                    <img src="${item.img}" alt="${item.name}" class="cart-item-img">
+                    <img src="${esc(item.img)}" alt="${esc(item.name)}" class="cart-item-img">
                     <div class="cart-item-details">
-                        <h4>${item.name}</h4>
-                        <p>${item.price} FCFA</p>
+                        <h4>${esc(item.name)}</h4>
+                        <p>${Number(item.price).toLocaleString('fr-FR')} FCFA</p>
                         <div class="cart-item-quantity">Quantité : ${item.quantity}</div>
                     </div>
-                    <button class="remove-item" data-index="${index}">&times;</button>
+                    <button class="remove-item" data-index="${idx}">&times;</button>
                 </li>
             `).join('');
-
             document.querySelectorAll('.remove-item').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = parseInt(e.target.dataset.index);
-                    cart.splice(index, 1);
+                btn.addEventListener('click', e => {
+                    cart.splice(parseInt(e.target.dataset.index), 1);
                     updateCartDisplay();
                 });
             });
         }
 
-        if (cartTotalDiv) cartTotalDiv.textContent = `Total : ${total} FCFA`;
+        const totalDiv = document.getElementById('cart-total');
+        if (totalDiv) totalDiv.textContent = `Total : ${Number(total).toLocaleString('fr-FR')} FCFA`;
         localStorage.setItem('cart', JSON.stringify(cart));
     }
 
     function showNotification(item) {
-        const notification = document.getElementById('cart-notification');
-        const notificationImg = document.getElementById('notification-img');
-        const notificationMessage = document.getElementById('notification-message');
-        
-        notificationImg.src = item.img;
-        notificationMessage.textContent = `${item.name} a été ajouté au panier !`;
-        notification.classList.add('visible');
-        
-        setTimeout(() => {
-            notification.classList.remove('visible');
-        }, 3000);
+        const notif = document.getElementById('cart-notification');
+        document.getElementById('notification-img').src = item.img;
+        document.getElementById('notification-message').textContent = `${item.name} a été ajouté au panier !`;
+        notif.classList.add('visible');
+        setTimeout(() => notif.classList.remove('visible'), 3000);
     }
 
-    const cartButton = document.getElementById('cart-button');
-    const cartModal = document.getElementById('cart-modal');
-    const closeButton = document.querySelector('.close-button');
-    const checkoutButton = document.getElementById('checkout-button');
+    // ── MODAL PANIER ─────────────────────────────────
+    document.getElementById('cart-button').addEventListener('click', () => {
+        updateCartDisplay();
+        document.getElementById('cart-modal').style.display = 'block';
+    });
+    document.querySelector('.close-button').addEventListener('click', () => {
+        document.getElementById('cart-modal').style.display = 'none';
+    });
+    document.getElementById('checkout-button').addEventListener('click', () => {
+        if (!cart.length) { alert('Votre panier est vide.'); return; }
+        const whatsapp = "22870445866"; // 🔧 VOTRE NUMÉRO WHATSAPP
+        let msg = "Salut ! 👋 J'aimerais passer la commande suivante :\n\n";
+        let total = 0;
+        cart.forEach(i => { msg += `🛒 ${i.name} x${i.quantity} - ${i.price * i.quantity} FCFA\n`; total += i.price * i.quantity; });
+        msg += `\n💰 Total : ${total} FCFA\n\nMerci de me donner les détails de la livraison et du paiement ! 🙏`;
+        window.location.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`;
+    });
 
-    if (cartButton) {
-        cartButton.addEventListener('click', () => {
-            updateCartDisplay();
-            cartModal.style.display = 'block';
-        });
-    }
-
-    if (closeButton) {
-        closeButton.addEventListener('click', () => {
-            cartModal.style.display = 'none';
-        });
-    }
-
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', () => {
-            if (cart.length === 0) {
-                alert("Votre panier est vide.");
-                return;
-            }
-
-            const whatsappNumber = "22870445866";
-            let orderMessage = "Salut ! 👋 J'aimerais passer la commande suivante :\n\n";
-            let total = 0;
-
-            cart.forEach(item => {
-                orderMessage += `🛒 ${item.name} x${item.quantity} - ${item.price * item.quantity} FCFA\n`;
-                total += item.price * item.quantity;
-            });
-
-            orderMessage += `\n💰 Total : ${total} FCFA\n\nMerci de me donner les détails de la livraison et du paiement ! 🙏`;
-
-            const encodedMessage = encodeURIComponent(orderMessage);
-            window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-        });
+    // ── UTILITAIRE XSS ───────────────────────────────
+    function esc(str) {
+        return String(str)
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
 
     updateCartDisplay();
